@@ -1,4 +1,4 @@
-from funcs import *
+from funcs import start, menu
 
 start()
 menu()

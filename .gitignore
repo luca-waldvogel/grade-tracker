@@ -1,2 +1,4 @@
 grades.bat
 __pycache__
+.idea
+.vscode
