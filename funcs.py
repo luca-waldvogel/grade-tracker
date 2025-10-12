@@ -55,23 +55,25 @@ def avg_grade():
 def avg_grade_semester():
     with open("files/grades.csv", "r") as f:
         data = csv.reader(f, delimiter=";")
-        grade = 0
-        count = 0
-        semester = 0
+        current_semester = 0
         for line in data:
             if not line or line[0] == "Module":
                 continue
-            semester = int(line[6])
+            current_semester = int(line[6])
 
     with open("files/grades.csv", "r") as f:
         data = csv.reader(f, delimiter=";")
-        for line in data:
-            if not line or line[0] == "Module":
-                continue
-            if int(line[6]) == semester:
-                grade += float(line[5]) * float(line[4])
-                count += float(line[4])
-        print(f"Average grade in semester {semester}: {round(grade / count, 1)}")
+        data = list(data)
+        for i in range(1, current_semester + 1):
+            grade = 0
+            count = 0
+            for line in data:
+                if not line or line[0] == "Module":
+                    continue
+                if int(line[6]) == i:
+                    grade += float(line[5]) * float(line[4])
+                    count += float(line[4])
+            print(f"Average grade in semester {i}: {round(grade / count, 2)}")
 
 
 def show_exams():
