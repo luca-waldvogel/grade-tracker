@@ -1,5 +1,7 @@
 import csv
 import sys
+import pendulum
+import pandas as pd
 
 
 def start():
@@ -17,7 +19,8 @@ def menu():
 1 = Show all exams
 2 = Show grades by module and semester
 3 = Add new grade
-4 = Exit
+4 = Delete grade by module and date
+5 = Exit
 """)
 
     user_input = input("Enter number to navigate: ")
@@ -33,6 +36,9 @@ def menu():
             add_new()
             menu()
         case "4":
+            delete_by_module()
+            menu()
+        case "5":
             sys.exit()
         case _:
             print("Choose from 1 to 4")
@@ -198,8 +204,21 @@ def add_new():
         module = input("Module: ")
         name = input("Name: ")
         exam_type = input("Exam type: ")
-        date = input("Date: ")
+        date_input = input("Date (leave empty for today): ")
+        if not date_input:
+            date_input = pendulum.today().to_date_string()
         weight = input("Weight: ")
         grade = input("Grade: ")
         semester = input("Semester: ")
-        writer.writerow([module, name, exam_type, date, weight, grade, semester])
+        writer.writerow([module, name, exam_type, date_input, weight, grade, semester])
+        print("New grade added successfully.")
+
+
+def delete_by_module():
+    module_name = input("Module name to delete: ")
+    date = input("Date of the exam to delete (YYYY-MM-DD): ")
+
+    df = pd.read_csv("files/grades.csv", delimiter=";")
+    df = df[(df["Module"] != module_name) & (df["Date"] != date)]
+    df.to_csv("files/grades.csv", sep=";", index=False)
+    print(f"Deleted entries for module {module_name} on date {date} if any existed.")
